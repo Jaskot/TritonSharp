@@ -18,7 +18,8 @@ namespace TriKatarina.Logic.Thoughts
         {
             var context = (ThoughtContext)contextObj;
 
-            UseItems(context);
+            if (context.Plugin.Config.Item("ComboItems").GetValue<bool>())
+                UseItems(context);
 
             KatarinaUtilities.CastQ(context.Target);
 
