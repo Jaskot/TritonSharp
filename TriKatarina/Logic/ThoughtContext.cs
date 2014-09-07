@@ -1,15 +1,17 @@
-﻿using LeagueSharp;
+﻿using System.Collections.Generic;
+using LeagueSharp;
 using LeagueSharp.Common;
+using TriKatarina.Logic.Thoughts;
 using Triton.Plugins;
 
 namespace TriKatarina.Logic
 {
     public class ThoughtContext
     {
-        private DamageContext _damageContext;
         private bool _castingUlt;
+        List<Target> _targets = new List<Target>();
 
-        public Obj_AI_Hero Target { get; set; }
+        public Target Target { get; set; }
         public ChampionPluginBase Plugin { get; set; }
 
         public float QTimeToHit { get; set; }
@@ -23,9 +25,10 @@ namespace TriKatarina.Logic
             set { _castingUlt = value; }
         }
 
-        public DamageContext DamageContext
+        public List<Target> Targets
         {
-            get { return _damageContext ?? (_damageContext = new DamageContext()); }
+            get { return _targets; }
+            set { _targets = value; }
         }
     }
 }

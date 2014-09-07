@@ -17,35 +17,35 @@ namespace TriKatarina
         public static float QTimeToHit { get; set; }
         public static float LastWardJump { get; set; }
 
-        public static bool CastQ(Obj_AI_Base target)
+        public static bool CastQ(Target target)
         {
-            if (target == null || !target.IsValid || !Katarina.Instance.Q.IsReady() || !target.IsValidTarget(Katarina.Instance.Q.Range))
+            if (target == null || !target.Unit.IsValid || !Katarina.Instance.Q.IsReady() || !target.Unit.IsValidTarget(Katarina.Instance.Q.Range))
                 return false;
 
-            Katarina.Instance.Q.CastOnUnit(target, true);
+            Katarina.Instance.Q.CastOnUnit(target.Unit, true);
             if (QTimeToHit == 0 || Environment.TickCount >= QTimeToHit)
             {
                 QTimeToHit = Environment.TickCount +
                                      (Katarina.Instance.Q.Delay +
-                                      (ObjectManager.Player.Distance(target.ServerPosition, false) /
+                                      (ObjectManager.Player.Distance(target.Unit.ServerPosition, false) /
                                        Katarina.Instance.Q.Speed));
             }
             return true;
         }
 
-        public static bool CastE(Obj_AI_Base target)
+        public static bool CastE(Target target)
         {
-            if (target == null || !target.IsValid || !Katarina.Instance.E.IsReady() || !target.IsValidTarget(Katarina.Instance.E.Range))
+            if (target == null || !target.Unit.IsValid || !Katarina.Instance.E.IsReady() || !target.Unit.IsValidTarget(Katarina.Instance.E.Range))
                 return false;
 
-            Katarina.Instance.E.CastOnUnit(target, true);
+            Katarina.Instance.E.CastOnUnit(target.Unit, true);
 
             return true;
         }
 
-        public static bool CastW(Obj_AI_Base target)
+        public static bool CastW(Target target)
         {
-            if (target == null || !target.IsValid || !Katarina.Instance.W.IsReady() || !target.IsValidTarget(Katarina.Instance.W.Range))
+            if (target == null || !target.Unit.IsValid || !Katarina.Instance.W.IsReady() || !target.Unit.IsValidTarget(Katarina.Instance.W.Range))
                 return false;
 
             return Katarina.Instance.W.Cast();
@@ -67,6 +67,19 @@ namespace TriKatarina
                 return false;
 
             return Katarina.Instance.R.Cast();
+        }
+
+        public static bool CastIgnite(Target target)
+        {
+            if (target == null || !target.Unit.IsValid || !target.Unit.IsValidTarget(600))
+                return false;
+
+            var ignite = ObjectManager.Player.SummonerSpellbook.Spells.FirstOrDefault(x => x.Name == "summonerdot");
+
+            if (ignite == null)
+                return false;
+
+            return ObjectManager.Player.SummonerSpellbook.CastSpell(ignite.Slot, target.Unit);
         }
 
         public static bool WardJump(ThoughtContext context, float x, float y)
@@ -128,27 +141,9 @@ namespace TriKatarina
             return true;
         }
 
-        public static void CalculateDamage(ThoughtContext context)
+        public static double GetLiandrysDamage(Target target)
         {
-            if (context.Target == null || !context.Target.IsValid)
-                return;
-
-            context.DamageContext.PDamage = Katarina.Instance.Q.IsReady() ? DamageLib.getDmg(context.Target, DamageLib.SpellType.Q, DamageLib.StageType.FirstDamage) : 0;
-            context.DamageContext.QDamage = Katarina.Instance.Q.IsReady() ? DamageLib.getDmg(context.Target, DamageLib.SpellType.Q) : 0;
-            context.DamageContext.WDamage = Katarina.Instance.W.IsReady() ? DamageLib.getDmg(context.Target, DamageLib.SpellType.W) : 0;
-            context.DamageContext.EDamage = Katarina.Instance.E.IsReady() ? DamageLib.getDmg(context.Target, DamageLib.SpellType.E) : 0;
-            context.DamageContext.RDamage = Katarina.Instance.R.IsReady() ? DamageLib.getDmg(context.Target, DamageLib.SpellType.R, DamageLib.StageType.FirstDamage) : 0;
-
-            context.DamageContext.DFGDamage = Items.CanUseItem((int)ItemIds.DeathfireGrasp) ? DamageLib.getDmg(context.Target, DamageLib.SpellType.DFG) : 0;
-            context.DamageContext.HXGDamage = Items.CanUseItem((int)ItemIds.HextechGunblade) ? DamageLib.getDmg(context.Target, DamageLib.SpellType.HEXGUN) : 0;
-            context.DamageContext.BWCDamage = Items.CanUseItem((int)ItemIds.BilgewaterCutlass) ? DamageLib.getDmg(context.Target, DamageLib.SpellType.BILGEWATER) : 0;
-            context.DamageContext.LiandrysDamage = Items.HasItem((int)ItemIds.LiandrysTorment) ? GetLiandrysDamage(context) : 0;
-
-        }
-
-        public static double GetLiandrysDamage(ThoughtContext context)
-        {
-            return DamageLib.CalcMagicDmg(0.06 * context.Target.MaxHealth, context.Target);
+            return DamageLib.CalcMagicDmg(0.06 * target.Unit.MaxHealth, target.Unit);
         }
 
         public static bool IsWard(Obj_AI_Base obj)

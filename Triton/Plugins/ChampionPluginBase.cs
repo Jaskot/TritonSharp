@@ -15,6 +15,8 @@ namespace Triton.Plugins
         private Spell _e;
         private Spell _r;
 
+        protected Orbwalking.Orbwalker _orbwalker;
+
         public ChampionPluginBase()
         {
         }
@@ -126,6 +128,11 @@ namespace Triton.Plugins
         public Spell R
         {
             get { return _r; }
+        }
+
+        public Orbwalking.Orbwalker Orbwalker
+        {
+            get { return _orbwalker; }
         }
     }
 }

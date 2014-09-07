@@ -11,7 +11,7 @@ namespace TriKatarina.Logic.Thoughts
         public override bool ShouldActualize(object contextObj)
         {
             var context = (ThoughtContext)contextObj;
-            return ((IsKeyDown(context) && context.Target != null && context.Target.IsValid) || IsWithinWRange()) && !context.CastingUlt;
+            return ((IsKeyDown(context) && context.Target != null && context.Target.Unit.IsValid) || IsWithinWRange()) && !context.CastingUlt;
         }
 
         public override void Actualize(object contextObj)
@@ -26,7 +26,7 @@ namespace TriKatarina.Logic.Thoughts
                 {
                     case 0:
                         if (context.Plugin.Config.Item("HarassDetonateQ").GetValue<bool>() &&
-                            Environment.TickCount >= context.QTimeToHit)
+                            context.Target.Unit.Buffs.Any(x => x.Name == "katarinaqmark"))
                         {
                             if (!context.Plugin.Q.IsReady())
                                 KatarinaUtilities.CastE(context.Target);
@@ -43,7 +43,7 @@ namespace TriKatarina.Logic.Thoughts
                         break;
 
                     case 1:
-                        if (ObjectManager.Player.Distance(context.Target, true) <
+                        if (ObjectManager.Player.Distance(context.Target.Unit, true) <
                             Katarina.Instance.W.Range*Katarina.Instance.W.Range)
                             KatarinaUtilities.CastW(context.Target);
                         break;

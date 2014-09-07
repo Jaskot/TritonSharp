@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using LeagueSharp;
 using LeagueSharp.Common;
 using TriKatarina.Logic;
@@ -49,9 +50,11 @@ namespace TriKatarina
         {
             base.SetupConfig();
             
+            _config.AddSubMenu(new Menu("Orbwalking", "Orbwalking", false));
+
             Menu comboMenu = new Menu("Combo Settings", "Combo");
             comboMenu.AddItem(new MenuItem("ComboKey", "Full Combo Key (SBTW)").SetValue(new KeyBind(32, KeyBindType.Press)));
-            comboMenu.AddItem(new MenuItem("StopUlt", "Stop ulti if target can die").SetValue(false));
+            comboMenu.AddItem(new MenuItem("StopUlt", "Stop ulti if target can die").SetValue(true));
             comboMenu.AddItem(new MenuItem("AutoE", "Auto E if not in Ulti Range").SetValue(false));
             comboMenu.AddItem(new MenuItem("ComboDetonateQ", "Try to proc Q mark").SetValue(false));
             comboMenu.AddItem(new MenuItem("ComboItems", "Use items with burst").SetValue(false));
@@ -64,12 +67,27 @@ namespace TriKatarina
             harassMenu.AddItem(new MenuItem("WHarass", "Always W ").SetValue(true));
             harassMenu.AddItem(new MenuItem("HarassMoveToMouse", "Move to mouse").SetValue(true));
 
+            Menu drawMenu = new Menu("Draw Settings", "Drawing");
+            drawMenu.AddItem(new MenuItem("DisableAllDrawing", "Disable drawing").SetValue(false));
+            drawMenu.AddItem(new MenuItem("DrawQ", "Draw Q range").SetValue(true));
+            drawMenu.AddItem(new MenuItem("DrawW", "Draw W range").SetValue(false));
+            drawMenu.AddItem(new MenuItem("DrawE", "Draw E range").SetValue(false));
+            drawMenu.AddItem(new MenuItem("DrawKill", "Draw kill text").SetValue(true));
+
             Menu miscMenu = new Menu("Misc Settings", "Misc");
             miscMenu.AddItem(new MenuItem("WardJumpKey", "Ward Jump Key").SetValue(new KeyBind('G', KeyBindType.Press)));
+
+            _orbwalker = new Orbwalking.Orbwalker(_config.SubMenu("Orbwalking"));
+
+            Menu targetSelectorMenu = new Menu("Target Selector", "TargetSelector", false);
+            SimpleTs.AddToMenu(targetSelectorMenu);
+
+            _config.AddSubMenu(targetSelectorMenu);
 
             _config.AddSubMenu(comboMenu);
             _config.AddSubMenu(harassMenu);
             _config.AddSubMenu(miscMenu);
+            _config.AddSubMenu(drawMenu);
 
             _config.AddToMainMenu();
         }
@@ -102,11 +120,11 @@ namespace TriKatarina
                         {
                             if (Config.Item("StopUlt").GetValue<bool>())
                             {
-                                if (!Q.IsReady() && !W.IsReady() && !E.IsReady() && _thoughtContext.Target != null &&
-                                    _thoughtContext.Target.IsValidTarget() &&
-                                    _thoughtContext.Target.Health >
-                                    (_thoughtContext.DamageContext.QDamage + _thoughtContext.DamageContext.WDamage +
-                                     _thoughtContext.DamageContext.EDamage))
+                                if ((!Q.IsReady() && !W.IsReady() && !E.IsReady()) && _thoughtContext.Target != null &&
+                                    _thoughtContext.Target.Unit.IsValid &&
+                                    _thoughtContext.Target.Unit.Health >
+                                    (_thoughtContext.Target.DamageContext.QDamage + _thoughtContext.Target.DamageContext.WDamage +
+                                     _thoughtContext.Target.DamageContext.EDamage))
                                     args.Process = false;
                             }
                         }
@@ -120,6 +138,22 @@ namespace TriKatarina
                         break;
                 }
             }            
+        }
+
+        public override void OnDraw(EventArgs args)
+        {
+            if (Config.Item("DisableAllDrawing").GetValue<bool>())
+                return;
+
+            if (Config.Item("DrawQ").GetValue<bool>())
+                Utility.DrawCircle(ObjectManager.Player.Position, Q.Range, Color.FromArgb(255, 178, 0, 0), 5, 30, false);
+            
+            if (Config.Item("DrawW").GetValue<bool>())
+                Utility.DrawCircle(ObjectManager.Player.Position, W.Range, Color.FromArgb(255, 178, 0, 0), 5, 30, false);
+
+            if (Config.Item("DrawE").GetValue<bool>())
+                Utility.DrawCircle(ObjectManager.Player.Position, E.Range, Color.FromArgb(255, 178, 0, 0), 5, 30, false);
+
         }
 
         public override void OnWndProc(WndEventArgs args)

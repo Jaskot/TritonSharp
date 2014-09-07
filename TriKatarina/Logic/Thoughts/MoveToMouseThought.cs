@@ -1,4 +1,6 @@
-﻿using LeagueSharp;
+﻿using System;
+using System.Linq;
+using LeagueSharp;
 using LeagueSharp.Common;
 using Triton.Logic;
 
@@ -9,12 +11,12 @@ namespace TriKatarina.Logic.Thoughts
         public override bool ShouldActualize(object contextObj)
         {
             var context = (ThoughtContext) contextObj;
+            
             return !context.CastingUlt && ShouldMove();
         }
 
         public override void Actualize(object contextObj)
         {
-            var context = (ThoughtContext)contextObj;
             ObjectManager.Player.IssueOrder(GameObjectOrder.MoveTo, Game.CursorPos);
         }
 

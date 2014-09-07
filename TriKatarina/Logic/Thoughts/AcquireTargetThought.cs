@@ -1,4 +1,5 @@
-﻿using LeagueSharp.Common;
+﻿using System.Linq;
+using LeagueSharp.Common;
 using Triton.Logic;
 
 namespace TriKatarina.Logic.Thoughts
@@ -13,7 +14,11 @@ namespace TriKatarina.Logic.Thoughts
         public override void Actualize(object contextObj)
         {
             var context = (ThoughtContext)contextObj;
-            context.Target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
+
+            var target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
+
+            if (target != null)
+                context.Target = context.Targets.FirstOrDefault(x=>x.Unit.NetworkId == target.NetworkId);
         }
     }
 }

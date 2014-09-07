@@ -47,6 +47,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -57,6 +58,7 @@
     <Compile Include="Katarina.cs" />
     <Compile Include="Logic\DamageContext.cs" />
     <Compile Include="KatarinaUtilities.cs" />
+    <Compile Include="Logic\Target.cs" />
     <Compile Include="Logic\ThoughtContext.cs" />
     <Compile Include="Logic\Thoughts\AcquireTargetThought.cs" />
     <Compile Include="Logic\Thoughts\AnalyzeThought.cs" />

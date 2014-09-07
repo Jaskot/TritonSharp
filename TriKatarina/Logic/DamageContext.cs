@@ -15,9 +15,19 @@
         public double IgniteDamage { get; set; }
         public double LiandrysDamage { get; set; }
 
+        public double ItemDamage
+        {
+            get { return DFGDamage + HXGDamage + BWCDamage + LiandrysDamage; }
+        }
+
+        public double SkillDamage
+        {
+            get { return PDamage + QDamage + EDamage + WDamage + RDamage; }
+        }
+
         public double TotalDamage
         {
-            get { return DFGDamage + HXGDamage + BWCDamage + IgniteDamage + LiandrysDamage; }
+            get { return ItemDamage + SkillDamage + IgniteDamage; }
         }
     }
 }
