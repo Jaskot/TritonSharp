@@ -10,7 +10,7 @@
         TowerAggro=0x6A,
         GameEnd=0xC6,
         Dash=0x64,
-        EmptyJungleClamp=0xC3,
+        EmptyJungleCamp=0xC3,
         LoseVision=0x51,
         GainVision=0xAD,
         Ping=0x40
