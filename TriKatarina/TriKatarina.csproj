@@ -62,8 +62,10 @@
     <Compile Include="Logic\ThoughtContext.cs" />
     <Compile Include="Logic\Thoughts\AcquireTargetThought.cs" />
     <Compile Include="Logic\Thoughts\AnalyzeThought.cs" />
+    <Compile Include="Logic\Thoughts\FarmThought.cs" />
     <Compile Include="Logic\Thoughts\FullComboThought.cs" />
     <Compile Include="Logic\Thoughts\HarassThought.cs" />
+    <Compile Include="Logic\Thoughts\KillStealThought.cs" />
     <Compile Include="Logic\Thoughts\MoveToMouseThought.cs" />
     <Compile Include="Logic\Thoughts\WardJumpThought.cs" />
     <Compile Include="Program.cs" />

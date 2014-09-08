@@ -24,7 +24,7 @@ namespace TriKatarina.Logic.Thoughts
                                      context.Target.DamageContext.EDamage)))
             {
                 if (context.Plugin.Config.Item("ComboItems").GetValue<bool>())
-                    UseItems(context);
+                    UseItems(context.Target);
 
                 if (context.Plugin.Q.IsReady())
                     KatarinaUtilities.CastQ(context.Target);
@@ -56,10 +56,17 @@ namespace TriKatarina.Logic.Thoughts
                 KatarinaUtilities.CastIgnite(igniteTarget);
         }
 
-        private void UseItems(ThoughtContext context)
+        private void UseItems(Target target)
         {
-            if (Items.CanUseItem((int)ItemIds.DeathfireGrasp))
-                Items.UseItem((int) ItemIds.DeathfireGrasp, context.Target.Unit);
+            if (Items.CanUseItem((int)ItemIds.DeathfireGrasp) && target.Unit.IsValidTarget(600))
+                Items.UseItem((int)ItemIds.DeathfireGrasp, target.Unit);
+            if (Items.CanUseItem((int)ItemIds.HextechGunblade) && target.Unit.IsValidTarget(600))
+                Items.UseItem((int)ItemIds.HextechGunblade, target.Unit);
+            if (Items.CanUseItem((int)ItemIds.BilgewaterCutlass) && target.Unit.IsValidTarget(450))
+                Items.UseItem((int)ItemIds.BilgewaterCutlass, target.Unit);
+            if (Items.CanUseItem((int)ItemIds.BladeOfTheRuinedKing) && target.Unit.IsValidTarget(450))
+                Items.UseItem((int)ItemIds.BladeOfTheRuinedKing, target.Unit);
         }
+
     }
 }

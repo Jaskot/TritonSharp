@@ -22,7 +22,8 @@ namespace TriKatarina.Logic.Thoughts
 
         public bool ShouldMove()
         {
-            return (IsHarassKeyDown() && ShouldHarassMoveToMouse()) || (IsComboKeyDown() && ShouldComboMoveToMouse()) || IsWardJumpKeyDown();
+            return (IsHarassKeyDown() && ShouldHarassMoveToMouse()) || (IsComboKeyDown() && ShouldComboMoveToMouse()) ||
+                   IsWardJumpKeyDown();
         }
 
         public bool IsHarassKeyDown()
@@ -49,5 +50,6 @@ namespace TriKatarina.Logic.Thoughts
         {
             return Katarina.Instance.Config.Item("WardJumpKey").GetValue<KeyBind>().Active;
         }
+
     }
 }

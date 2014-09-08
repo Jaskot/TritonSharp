@@ -50,7 +50,7 @@ namespace TriKatarina.Logic.Thoughts
                 }
             }
 
-            if (context.Plugin.Config.Item("WHarass").GetValue<bool>() && IsWithinWRange())
+            if (!context.Plugin.Config.Item("FarmKey").GetValue<KeyBind>().Active && context.Plugin.Config.Item("WHarass").GetValue<bool>() && IsWithinWRange())
                 KatarinaUtilities.CastW();
         }
 

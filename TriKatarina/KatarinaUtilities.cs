@@ -23,15 +23,19 @@ namespace TriKatarina
                 return false;
 
             Katarina.Instance.Q.CastOnUnit(target.Unit, true);
-            if (QTimeToHit == 0 || Environment.TickCount >= QTimeToHit)
-            {
-                QTimeToHit = Environment.TickCount +
-                                     (Katarina.Instance.Q.Delay +
-                                      (ObjectManager.Player.Distance(target.Unit.ServerPosition, false) /
-                                       Katarina.Instance.Q.Speed));
-            }
             return true;
         }
+
+        public static bool CastQ(Obj_AI_Base target)
+        {
+            if (target == null || !target.IsValid || !Katarina.Instance.Q.IsReady() || !target.IsValidTarget(Katarina.Instance.Q.Range))
+                return false;
+
+            Katarina.Instance.Q.CastOnUnit(target, true);
+
+            return true;
+        }
+
 
         public static bool CastE(Target target)
         {
@@ -42,6 +46,18 @@ namespace TriKatarina
 
             return true;
         }
+
+        public static bool CastE(Obj_AI_Base target)
+        {
+            if (target == null || !target.IsValid || !Katarina.Instance.E.IsReady() || !target.IsValidTarget(Katarina.Instance.E.Range))
+                return false;
+
+            Katarina.Instance.E.CastOnUnit(target, true);
+
+            return true;
+        }
+
+
 
         public static bool CastW(Target target)
         {

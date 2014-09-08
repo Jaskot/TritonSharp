@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 using LeagueSharp;
 using LeagueSharp.Common;
 using TriKatarina.Logic;
@@ -39,9 +40,11 @@ namespace TriKatarina
             _brain.Thoughts.Add(new AnalyzeThought());
             _brain.Thoughts.Add(new AcquireTargetThought());
             _brain.Thoughts.Add(new MoveToMouseThought());
+            _brain.Thoughts.Add(new KillStealThought());
             _brain.Thoughts.Add(new WardJumpThought());
             _brain.Thoughts.Add(new FullComboThought());
             _brain.Thoughts.Add(new HarassThought());
+            _brain.Thoughts.Add(new FarmThought());
 
             return true;
         }
@@ -74,6 +77,17 @@ namespace TriKatarina
             drawMenu.AddItem(new MenuItem("DrawE", "Draw E range").SetValue(false));
             drawMenu.AddItem(new MenuItem("DrawKill", "Draw kill text").SetValue(true));
 
+            Menu farmMenu = new Menu("Farm Settings", "Farming");
+            farmMenu.AddItem(new MenuItem("FarmKey", "Farm Key").SetValue(new KeyBind('X', KeyBindType.Press)));
+            farmMenu.AddItem(new MenuItem("QFarm", "Farm with Q").SetValue(true));
+            farmMenu.AddItem(new MenuItem("WFarm", "Farm with W").SetValue(true));
+            farmMenu.AddItem(new MenuItem("EFarm", "Farm with E").SetValue(false));
+
+            Menu ksMenu = new Menu("Kill Steal Settings", "KillStealing");
+            ksMenu.AddItem(new MenuItem("KillSteal", "Enabled").SetValue(true));
+            ksMenu.AddItem(new MenuItem("KsUseUlt", "Use Ult").SetValue(true));
+            ksMenu.AddItem(new MenuItem("KsUseItems", "Use Items").SetValue(true));
+
             Menu miscMenu = new Menu("Misc Settings", "Misc");
             miscMenu.AddItem(new MenuItem("WardJumpKey", "Ward Jump Key").SetValue(new KeyBind('G', KeyBindType.Press)));
 
@@ -86,6 +100,8 @@ namespace TriKatarina
 
             _config.AddSubMenu(comboMenu);
             _config.AddSubMenu(harassMenu);
+            _config.AddSubMenu(farmMenu);
+            _config.AddSubMenu(ksMenu);
             _config.AddSubMenu(miscMenu);
             _config.AddSubMenu(drawMenu);
 
@@ -154,6 +170,8 @@ namespace TriKatarina
             if (Config.Item("DrawE").GetValue<bool>())
                 Utility.DrawCircle(ObjectManager.Player.Position, E.Range, Color.FromArgb(255, 178, 0, 0), 5, 30, false);
 
+            if (Config.Item("DrawKill").GetValue<bool>())
+                _thoughtContext.Targets.ForEach(x=>x.DrawText());
         }
 
         public override void OnWndProc(WndEventArgs args)
