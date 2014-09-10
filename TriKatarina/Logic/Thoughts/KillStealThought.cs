@@ -26,6 +26,7 @@ namespace TriKatarina.Logic.Thoughts
         ItemsKs,
 
     }
+
     class KillStealThought : ParallelThought
     {
         public override bool ShouldActualize(object contextObj)

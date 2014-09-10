@@ -11,14 +11,14 @@ namespace TriKatarina.Logic.Thoughts
         public override bool ShouldActualize(object contextObj)
         {
             var context = (ThoughtContext)contextObj;
-            return ((IsKeyDown(context) && context.Target != null && context.Target.Unit.IsValid) || IsWithinWRange()) && !context.CastingUlt;
+            return ((IsHarassKeyDown() && context.Target != null && context.Target.Unit.IsValid) || IsWithinWRange()) && !context.CastingUlt;
         }
 
         public override void Actualize(object contextObj)
         {
             var context = (ThoughtContext)contextObj;
 
-            if (IsKeyDown(context))
+            if (IsHarassKeyDown())
             {
                 KatarinaUtilities.CastQ(context.Target);
 
@@ -54,9 +54,9 @@ namespace TriKatarina.Logic.Thoughts
                 KatarinaUtilities.CastW();
         }
 
-        public bool IsKeyDown(ThoughtContext context)
+        public bool IsHarassKeyDown()
         {
-            return context.Plugin.Config.Item("HarassKey").GetValue<KeyBind>().Active;
+            return Katarina.Instance.Config.Item("HarassKey").GetValue<KeyBind>().Active;
         }
 
         public bool IsWithinWRange()

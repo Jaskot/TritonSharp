@@ -85,6 +85,13 @@ namespace TriKatarina
             return Katarina.Instance.R.Cast();
         }
 
+        public static bool GetRangedHealthCheck(Obj_AI_Base target, DamageLib.SpellType spellType, DamageLib.StageType stage, float precision, float speed)
+        {
+            return HealthPrediction.GetHealthPrediction(target,
+                (int) ((ObjectManager.Player.Distance(target, false)*precision)/speed)) <
+            (0.75*DamageLib.getDmg(target, spellType, stage));
+        }
+
         public static bool CastIgnite(Target target)
         {
             if (target == null || !target.Unit.IsValid || !target.Unit.IsValidTarget(600))

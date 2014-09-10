@@ -26,56 +26,40 @@ namespace TriKatarina.Logic.Thoughts
             foreach (var minion in ObjectManager.Get<Obj_AI_Minion>().Where(x => x != null && x.IsValid && x.IsEnemy))
             {
 
-                var pDmg = DamageLib.getDmg(minion, DamageLib.SpellType.Q, DamageLib.StageType.FirstDamage);
-                var qDmg = DamageLib.getDmg(minion, DamageLib.SpellType.Q);
                 var wDmg = DamageLib.getDmg(minion, DamageLib.SpellType.W);
                 var eDmg = DamageLib.getDmg(minion, DamageLib.SpellType.E);
 
                 if (minion.IsValidTarget(context.Plugin.W.Range))
                 {
-
                     if (qFarm && wFarm)
                     {
-                        if (minion.Health <= (qDmg + wDmg) && minion.Health > wDmg && context.Plugin.Q.IsReady() &&
-                            context.Plugin.W.IsReady())
+                        if (KatarinaUtilities.GetRangedHealthCheck(minion, DamageLib.SpellType.Q, DamageLib.StageType.FirstDamage, 1000f, Katarina.Instance.Q.Speed) && context.Plugin.Q.IsReady())
                         {
                             KatarinaUtilities.CastQ(minion);
-                            KatarinaUtilities.CastW();
-                            break;
                         }
-                        else if (context.Plugin.W.IsReady() && minion.Health <= wDmg)
+                        else if (context.Plugin.W.IsReady() && minion.Health <= wDmg*0.75)
                         {
                             KatarinaUtilities.CastW();
-                            break;
-                        }
-                        else if (context.Plugin.Q.IsReady() && minion.Health <= qDmg)
-                        {
-                            KatarinaUtilities.CastQ(minion);
-                            break;
                         }
                     }
-                    else if (qFarm && context.Plugin.Q.IsReady() && minion.Health <= qDmg)
+                    else if (qFarm && context.Plugin.Q.IsReady() && KatarinaUtilities.GetRangedHealthCheck(minion, DamageLib.SpellType.Q, DamageLib.StageType.FirstDamage, 1000f, 1400f))
                     {
                         KatarinaUtilities.CastQ(minion);
-                        break;
                     }
                     else if (wFarm && context.Plugin.W.IsReady() && minion.Health <= wDmg)
                     {
                         KatarinaUtilities.CastW();
-                        break;
                     }
                 }
                 else
                 {
-                    if (qFarm && minion.Health <= qDmg && minion.IsValidTarget(context.Plugin.Q.Range))
+                    if (qFarm && KatarinaUtilities.GetRangedHealthCheck(minion, DamageLib.SpellType.Q, DamageLib.StageType.FirstDamage, 1000f, Katarina.Instance.Q.Speed) && minion.IsValidTarget(context.Plugin.Q.Range))
                     {
                         KatarinaUtilities.CastQ(minion);
-                        break;
                     }
-                    if (eFarm && minion.Health <= eDmg && minion.IsValidTarget(context.Plugin.E.Range))
+                    if (eFarm && minion.Health <= eDmg*0.75 && minion.IsValidTarget(context.Plugin.E.Range))
                     {
                         KatarinaUtilities.CastE(minion);
-                        break;
                     }
                 }
             }
