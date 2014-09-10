@@ -82,6 +82,7 @@ namespace TriKatarina
             farmMenu.AddItem(new MenuItem("QFarm", "Farm with Q").SetValue(true));
             farmMenu.AddItem(new MenuItem("WFarm", "Farm with W").SetValue(true));
             farmMenu.AddItem(new MenuItem("EFarm", "Farm with E").SetValue(false));
+            farmMenu.AddItem(new MenuItem("FarmMoveToMouse", "Move to mouse while farming").SetValue(false));
 
             Menu ksMenu = new Menu("Kill Steal Settings", "KillStealing");
             ksMenu.AddItem(new MenuItem("KillSteal", "Enabled").SetValue(true));

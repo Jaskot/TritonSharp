@@ -22,9 +22,9 @@ namespace TriKatarina.Logic.Thoughts
 
         public bool ShouldMove()
         {
-            return (IsHarassKeyDown() && ShouldHarassMoveToMouse()) || (IsComboKeyDown() && ShouldComboMoveToMouse()) ||
-                   IsWardJumpKeyDown();
+            return (IsHarassKeyDown() && ShouldHarassMoveToMouse()) || (IsComboKeyDown() && ShouldComboMoveToMouse()) || IsWardJumpKeyDown() || (ShouldFarmMoveToMouse() && IsFarmKeyDown());
         }
+
 
         public bool IsHarassKeyDown()
         {
@@ -49,6 +49,16 @@ namespace TriKatarina.Logic.Thoughts
         public bool IsWardJumpKeyDown()
         {
             return Katarina.Instance.Config.Item("WardJumpKey").GetValue<KeyBind>().Active;
+        }
+
+        public bool IsFarmKeyDown()
+        {
+            return Katarina.Instance.Config.Item("FarmKey").GetValue<KeyBind>().Active;
+        }
+
+        private bool ShouldFarmMoveToMouse()
+        {
+            return Katarina.Instance.Config.Item("FarmMoveToMouse").GetValue<bool>();
         }
 
     }
