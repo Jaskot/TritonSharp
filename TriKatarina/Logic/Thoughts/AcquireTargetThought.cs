@@ -15,7 +15,7 @@ namespace TriKatarina.Logic.Thoughts
         {
             var context = (ThoughtContext)contextObj;
 
-            var target = SimpleTs.GetTarget(1200f, SimpleTs.DamageType.Magical);
+            var target = SimpleTs.GetTarget(context.Plugin.E.Range, SimpleTs.DamageType.Magical);
 
             if (target != null)
                 context.Target = context.Targets.FirstOrDefault(x=>x.Unit.NetworkId == target.NetworkId);
